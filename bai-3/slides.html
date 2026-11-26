@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Từ ý tưởng đến sản phẩm — Quy trình phát triển phần mềm</title>
+  <style>
+    :root {
+      --ink: #10191b;
+      --muted: #a9b8b5;
+      --paper: #f4f7f5;
+      --green: #08d3a0;
+      --green-dark: #007f68;
+      --line: rgba(255,255,255,.14);
+      --panel: #132124;
+      --amber: #ffca76;
+      --blue: #8bc7ff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: Arial, "Segoe UI", sans-serif; }
+    body { background: #d7ddda; color: var(--paper); }
+    .slide {
+      position: relative;
+      width: 13.333in;
+      height: 7.5in;
+      overflow: hidden;
+      padding: .5in .66in .42in;
+      page-break-after: always;
+      background:
+        radial-gradient(ellipse at 92% 8%, rgba(0,132,103,.22), transparent 36%),
+        var(--ink);
+      display: flex;
+      flex-direction: column;
+    }
+    .slide:last-child { page-break-after: auto; }
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11pt;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: .28in;
+    }
+    .brand { color: var(--paper); font-weight: 700; letter-spacing: 1px; }
+    .brand b { color: var(--green); }
+    .time { color: var(--green); letter-spacing: 1px; font-size: 10pt; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 43pt; line-height: 1.06; margin-bottom: .2in; letter-spacing: -1.5px; }
+    h2 { font-size: 29pt; line-height: 1.1; margin: 0 0 .1in; letter-spacing: -.5px; }
+    h3 { font-size: 16pt; margin: 0 0 .08in; }
+    p { line-height: 1.42; }
+    .eyebrow { color: var(--green); font-size: 12pt; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .sub { color: var(--muted); font-size: 16pt; max-width: 10.8in; margin-bottom: .25in; }
+    .rule { width: .72in; height: 5px; background: var(--green); border-radius: 6px; margin: .13in 0 .22in; }
+    .footer {
+      position: absolute;
+      left: .66in; right: .66in; bottom: .2in;
+      display: flex; justify-content: space-between;
+      color: #788a86; font-size: 9pt; letter-spacing: 1px;
+    }
+    .accent { color: var(--green); }
+    .soft { color: var(--muted); }
+    .tag {
+      display: inline-block; border: 1px solid rgba(8,211,160,.45);
+      color: var(--green); border-radius: 30px; padding: 5px 11px;
+      font-size: 10pt; font-weight: 700; letter-spacing: 1px;
+    }
+    .grid { display: grid; gap: .14in; }
+    .card {
+      background: rgba(255,255,255,.055);
+      border: 1px solid var(--line); border-radius: 14px; padding: .18in;
+    }
+    .card p { font-size: 12.5pt; color: var(--muted); margin: .06in 0 0; }
+    .num {
+      display: inline-grid; place-items: center; width: .34in; height: .34in;
+      border-radius: 50%; color: var(--ink); background: var(--green);
+      font-size: 12pt; font-weight: 800; margin-bottom: .12in;
+    }
+    .cover { justify-content: center; }
+    .cover .topline { position: absolute; top: .48in; left: .66in; right: .66in; }
+    .cover h1 { max-width: 9.6in; font-size: 53pt; }
+    .cover .sub { font-size: 19pt; }
+    .cover-mark {
+      position: absolute; right: .85in; bottom: .9in; width: 2.5in; height: 2.5in;
+      border: 1px solid rgba(8,211,160,.3); border-radius: 50%;
+      box-shadow: 0 0 0 .32in rgba(8,211,160,.04), 0 0 0 .72in rgba(8,211,160,.025);
+    }
+    .cover-mark:after {
+      content: ""; position: absolute; width: .65in; height: .65in; border-radius: 50%;
+      background: var(--green); top: 50%; left: 50%; transform: translate(-50%,-50%);
+      box-shadow: 0 0 38px rgba(8,211,160,.55);
+    }
+    .cover-flow { display: flex; align-items: center; gap: .13in; max-width: 9.7in; margin-top: .2in; }
+    .cover-flow span { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; font-size: 11pt; color: #d4dfdc; }
+    .cover-flow i { color: var(--green); font-style: normal; font-size: 15pt; }
+    .stages { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: .08in; }
+    .stage { min-height: 2.85in; min-width: 0; }
+    .stage h3 { min-height: .42in; font-size: 14pt; }
+    .stage p { font-size: 11.5pt; overflow-wrap: anywhere; }
+    .stage .role { display: block; color: var(--green); font-size: 9pt; margin-top: .12in; font-weight: 700; overflow-wrap: anywhere; }
+    .loopbar {
+      margin-top: .17in; border-radius: 12px; padding: .15in .2in;
+      background: rgba(8,211,160,.09); border: 1px solid rgba(8,211,160,.28);
+      display: flex; justify-content: space-between; align-items: center; font-size: 13pt;
+    }
+    .compare { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: .12in; }
+    .compare .card { min-height: 3.35in; padding: .24in; }
+    .compare h3 { font-size: 21pt; }
+    .compare ul { margin: .14in 0 0; padding-left: .25in; color: var(--muted); font-size: 13pt; line-height: 1.65; }
+    .waterfall { border-top: 3px solid var(--blue); }
+    .agile { border-top: 3px solid var(--green); }
+    .fitbar {
+      margin-top: .16in; display: grid; grid-template-columns: 1fr 1fr 1.1fr;
+      gap: .12in; font-size: 11.5pt;
+    }
+    .fitbar div { padding: .12in .16in; border-radius: 9px; background: rgba(255,255,255,.06); color: var(--muted); }
+    .fitbar strong { display: block; color: var(--paper); margin-bottom: 4px; }
+    .scrum-note { margin-top: .14in; color: var(--muted); font-size: 12pt; }
+    .scrum-note strong { color: var(--green); }
+    .example-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:.12in; }
+    .example { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top:.08in; }
+    .example .card { min-height: 2.52in; padding: .16in; }
+    .example h3 { font-size: 14pt; }
+    .example p { font-size: 11.3pt; }
+    .arrowline { display:flex; align-items:center; justify-content:center; color:var(--green); font-size:20pt; margin:.05in 0; }
+    .hypothetical { color:var(--amber); font-size:10.5pt; }
+    .mvp-layout { display:grid; grid-template-columns: 1.1fr .9fr; gap:.3in; align-items:center; margin-top:.14in; }
+    .mvp-box { padding:.28in; border:1px solid rgba(8,211,160,.38); background:rgba(8,211,160,.08); border-radius:18px; }
+    .mvp-box .big { font-size:24pt; font-weight:800; color:var(--green); margin:.02in 0 .12in; }
+    .mvp-box p { color:var(--muted); font-size:14pt; margin:0; }
+    .cycle { display:grid; grid-template-columns: 1fr 1fr; gap:.12in; }
+    .cycle .card { min-height:1.05in; display:flex; flex-direction:column; justify-content:center; }
+    .cycle .card b { color:var(--green); font-size:14pt; }
+    .cycle .card span { color:var(--muted); font-size:11pt; margin-top:5px; }
+    .tool-flow { display:grid; grid-template-columns: minmax(0,1fr) 24px minmax(0,1fr) 24px minmax(0,1fr) 24px minmax(0,1fr); align-items:center; gap:.05in; margin:.22in 0 .18in; }
+    .tool-flow > * { min-width:0; }
+    .tool-flow .box { min-height:1.5in; display:flex; flex-direction:column; justify-content:center; padding:.14in; text-align:center; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:13px; }
+    .tool-flow .box b { color:var(--green); font-size:15pt; margin-bottom:6px; }
+    .tool-flow .box span { color:var(--muted); font-size:11pt; line-height:1.35; }
+    .tool-flow .arrow { color:var(--green); text-align:center; font-size:20pt; }
+    .tool-notes { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:.14in; }
+    .tool-notes .card { padding:.15in .19in; }
+    .tool-notes h3 { font-size:14pt; }
+    .tool-notes p { font-size:11.5pt; }
+    .closing { display:grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap:.28in; margin-top:.14in; }
+    .takeaways { list-style:none; margin:0; padding:0; }
+    .takeaways li { display:flex; gap:.12in; margin-bottom:.18in; font-size:15pt; line-height:1.35; }
+    .check { color:var(--green); font-weight:800; }
+    .sources { padding:.18in .2in; background:rgba(255,255,255,.055); border:1px solid var(--line); border-radius:14px; }
+    .sources h3 { color:var(--green); margin-bottom:.12in; }
+    .sources p { color:var(--muted); font-size:10.5pt; line-height:1.45; margin:.06in 0; overflow-wrap:anywhere; }
+    .sources a { color:#b8f5e5; text-decoration:none; }
+    @media print {
+      @page { size: 13.333in 7.5in; margin: 0; }
+      html, body { width:13.333in; margin:0; background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .slide { margin:0; break-after:page; page-break-after:always; }
+      .slide:last-child { break-after:auto; page-break-after:auto; }
+    }
+  </style>
+</head>
+<body>
+  <section class="slide cover">
+    <div class="topline"><span>Ventra Camp · Tuần 1</span><span class="time">01 / 07 · 0:20</span></div>
+    <div class="eyebrow">Quy trình xây dựng phần mềm</div>
+    <div class="rule"></div>
+    <h1>Từ ý tưởng<br>đến sản phẩm</h1>
+    <p class="sub">Một hành trình có kế hoạch, phản hồi và cải tiến liên tục.</p>
+    <div class="cover-flow">
+      <span>Vấn đề</span><i>→</i><span>Giải pháp</span><i>→</i><span>Sản phẩm</span><i>→</i><span>Người dùng</span>
+    </div>
+    <div class="cover-mark"></div>
+    <div class="footer"><span>Cảnh · Bài 3</span><span>SDLC · Agile · Scrum</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · SDLC</span><span class="time">02 / 07 · 0:55</span></div>
+    <div class="eyebrow">01 · Bản đồ hành trình</div>
+    <h2>Phần mềm đi qua những giai đoạn nào?</h2>
+    <div class="rule"></div>
+    <p class="sub">SDLC (Software Development Life Cycle) biến nhu cầu thành sản phẩm có thể vận hành và tiếp tục cải thiện.</p>
+    <div class="grid stages">
+      <div class="card stage"><span class="num">1</span><h3>Khám phá</h3><p>Tìm vấn đề, người dùng và mục tiêu.</p><span class="role">PM · BA · người dùng</span></div>
+      <div class="card stage"><span class="num">2</span><h3>Yêu cầu & kế hoạch</h3><p>Chốt phạm vi, ưu tiên, rủi ro.</p><span class="role">PM · BA · nhóm</span></div>
+      <div class="card stage"><span class="num">3</span><h3>Thiết kế</h3><p>Luồng sử dụng, giao diện, kiến trúc.</p><span class="role">UX/UI · kiến trúc sư</span></div>
+      <div class="card stage"><span class="num">4</span><h3>Phát triển</h3><p>Viết code, tích hợp và review.</p><span class="role">Developer</span></div>
+      <div class="card stage"><span class="num">5</span><h3>Kiểm thử</h3><p>Tìm lỗi, kiểm tra yêu cầu và chất lượng.</p><span class="role">QA · tester · developer</span></div>
+      <div class="card stage"><span class="num">6</span><h3>Triển khai & duy trì</h3><p>Đưa đến người dùng, theo dõi, sửa lỗi.</p><span class="role">DevOps · support · nhóm</span></div>
+    </div>
+    <div class="loopbar"><span>Không phải lúc nào cũng đi một chiều</span><b class="accent">Phản hồi có thể đưa nhóm quay lại bất kỳ bước nào ↶</b></div>
+    <div class="footer"><span>Các vai trò có thể khác nhau tùy quy mô dự án</span><span>02</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · PHƯƠNG PHÁP</span><span class="time">03 / 07 · 1:00</span></div>
+    <div class="eyebrow">02 · Chọn cách tổ chức công việc</div>
+    <h2>Waterfall và Agile: khác nhau ở cách thích ứng</h2>
+    <div class="rule"></div>
+    <div class="grid compare">
+      <div class="card waterfall">
+        <h3 style="color:var(--blue)">Waterfall · tuần tự</h3>
+        <p class="soft">Yêu cầu → thiết kế → xây dựng → kiểm thử → bàn giao</p>
+        <ul><li>Lập kế hoạch và chốt yêu cầu sớm.</li><li>Mỗi giai đoạn thường hoàn tất trước khi chuyển tiếp.</li><li>Thay đổi muộn có thể tốn kém.</li></ul>
+      </div>
+      <div class="card agile">
+        <h3 class="accent">Agile · lặp và thích ứng</h3>
+        <p class="soft">Chia nhỏ việc → làm → nhận phản hồi → điều chỉnh</p>
+        <ul><li>Giao phần mềm có giá trị theo từng đợt nhỏ.</li><li>Thường xuyên trao đổi với người dùng.</li><li>Ưu tiên thích ứng khi học được điều mới.</li></ul>
+      </div>
+    </div>
+    <div class="fitbar">
+      <div><strong>Waterfall hợp khi</strong>phạm vi ổn định, cần kế hoạch và hồ sơ rõ.</div>
+      <div><strong>Agile hợp khi</strong>nhu cầu còn đổi, cần học từ phản hồi sớm.</div>
+      <div><strong>Scrum là gì?</strong>Một framework Agile; nhóm làm theo Sprint, xem kết quả rồi điều chỉnh.</div>
+    </div>
+    <p class="scrum-note"><strong>Trong Scrum:</strong> Product Owner ưu tiên Product Backlog · Scrum Master hỗ trợ nhóm · Developers tạo Increment trong mỗi Sprint.</p>
+    <div class="footer"><span>Scrum Guide · Sprint tối đa một tháng</span><span>03</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · VÍ DỤ</span><span class="time">04 / 07 · 1:00</span></div>
+    <div class="example-head">
+      <div><div class="eyebrow">03 · Giả sử nhóm làm một tính năng mới</div><h2>Ví dụ: đặt đồ ăn trên Grab</h2></div>
+      <span class="tag">TÌNH HUỐNG GIẢ ĐỊNH</span>
+    </div>
+    <p class="sub">Mục tiêu giả định: giúp người dùng biết đơn hàng đang ở bước nào.</p>
+    <div class="grid example">
+      <div class="card"><span class="num">1</span><h3>Hiểu vấn đề</h3><p>Người dùng lo lắng vì không biết quán đã nhận đơn chưa.</p></div>
+      <div class="card"><span class="num">2</span><h3>Đặt yêu cầu</h3><p>Hiển thị trạng thái rõ: đã nhận, đang chuẩn bị, đang giao.</p></div>
+      <div class="card"><span class="num">3</span><h3>Thiết kế & code</h3><p>Vẽ luồng màn hình; developer nối trạng thái từ hệ thống đơn hàng.</p></div>
+      <div class="card"><span class="num">4</span><h3>Kiểm thử</h3><p>Thử mạng yếu, đổi trạng thái, hủy đơn và nhiều loại thiết bị.</p></div>
+      <div class="card"><span class="num">5</span><h3>Ra mắt & học</h3><p>Triển khai, theo dõi lỗi và phản hồi; sửa ở phiên bản sau.</p></div>
+    </div>
+    <div class="arrowline">Vấn đề → yêu cầu → bản dùng thử → kiểm tra → phát hành → phản hồi</div>
+    <p class="hypothetical">Đây là ví dụ minh họa cách áp dụng SDLC, không khẳng định quy trình nội bộ thực tế của Grab.</p>
+    <div class="footer"><span>Ví dụ dùng để giải thích quy trình</span><span>04</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · MVP</span><span class="time">05 / 07 · 0:45</span></div>
+    <div class="eyebrow">04 · Đừng đợi hoàn hảo mới học từ người dùng</div>
+    <h2>MVP: bản nhỏ nhất vẫn tạo được giá trị</h2>
+    <div class="rule"></div>
+    <div class="mvp-layout">
+      <div class="mvp-box">
+        <div class="big">MVP ≠ sản phẩm cẩu thả</div>
+        <p>MVP (Minimum Viable Product) là phiên bản tối thiểu đủ hữu ích để kiểm tra giả định với người dùng thật.</p>
+      </div>
+      <div class="cycle">
+        <div class="card"><b>1 · Xây</b><span>Chỉ làm phần cốt lõi</span></div>
+        <div class="card"><b>2 · Đo</b><span>Quan sát cách dùng, lỗi, thời gian</span></div>
+        <div class="card"><b>3 · Học</b><span>Phản hồi có giải quyết đúng vấn đề?</span></div>
+        <div class="card"><b>4 · Cải tiến</b><span>Ưu tiên thay đổi cho vòng tiếp theo</span></div>
+      </div>
+    </div>
+    <div class="loopbar"><span>Phát hành cũng không phải điểm kết thúc</span><b class="accent">Bảo trì · bảo mật · hiệu năng · tính năng mới</b></div>
+    <div class="footer"><span>Build → Measure → Learn</span><span>05</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · CÔNG CỤ</span><span class="time">06 / 07 · 0:45</span></div>
+    <div class="eyebrow">05 · GitHub và IDE ở đâu?</div>
+    <h2>Công cụ hỗ trợ quy trình<br>không thay thế quy trình</h2>
+    <div class="rule"></div>
+    <div class="tool-flow">
+      <div class="box"><b>Yêu cầu</b><span>Issue · mô tả việc cần làm</span></div><div class="arrow">→</div>
+      <div class="box"><b>IDE</b><span>Viết, chạy và debug code</span></div><div class="arrow">→</div>
+      <div class="box"><b>GitHub</b><span>Commit · branch · pull request · review</span></div><div class="arrow">→</div>
+      <div class="box"><b>Kiểm tra & phát hành</b><span>CI · deploy · theo dõi</span></div>
+    </div>
+    <div class="tool-notes">
+      <div class="card"><h3 class="accent">IDE · nơi làm việc với code</h3><p>Developer viết và kiểm tra code trong IDE. IDE giúp làm việc thuận tiện; nó không tự đảm bảo phần mềm đúng.</p></div>
+      <div class="card"><h3 class="accent">GitHub · nơi cộng tác</h3><p>Lưu lịch sử, quản lý issue và review thay đổi qua pull request. Nhóm vẫn cần kiểm thử trước khi phát hành.</p></div>
+    </div>
+    <div class="footer"><span>Liên kết Bài 1 (GitHub) và Bài 2 (IDE) vào SDLC</span><span>06</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="topline"><span class="brand">VENTRA<b>ROCKET</b> · TỔNG KẾT</span><span class="time">07 / 07 · 0:15</span></div>
+    <div class="eyebrow">Điều cần nhớ</div>
+    <h2>Phần mềm tốt được làm ra qua nhiều vòng học hỏi</h2>
+    <div class="rule"></div>
+    <div class="closing">
+      <ul class="takeaways">
+        <li><span class="check">✓</span><span>SDLC kết nối nhu cầu với vận hành và bảo trì.</span></li>
+        <li><span class="check">✓</span><span>Waterfall và Agile phù hợp với bối cảnh khác nhau.</span></li>
+        <li><span class="check">✓</span><span>Kiểm thử, phản hồi và cải tiến là việc liên tục.</span></li>
+        <li><span class="check">✓</span><span>IDE và GitHub giúp đội ngũ phối hợp hiệu quả hơn.</span></li>
+      </ul>
+      <div class="sources">
+        <h3>Nguồn tham khảo</h3>
+        <p>Scrum Guide (2020)<br><a href="https://scrumguides.org/scrum-guide.html">scrumguides.org/scrum-guide.html</a></p>
+        <p>Agile Manifesto<br><a href="https://agilemanifesto.org/">agilemanifesto.org</a></p>
+        <p>IBM · Software development lifecycle<br><a href="https://www.ibm.com/think/topics/sdlc">ibm.com/think/topics/sdlc</a></p>
+        <p>GitHub Docs · GitHub flow<br><a href="https://docs.github.com/en/get-started/using-github/github-flow">docs.github.com/.../github-flow</a></p>
+      </div>
+    </div>
+    <div class="footer"><span>Cảm ơn mọi người!</span><span>07</span></div>
+  </section>
+</body>
+</html>
